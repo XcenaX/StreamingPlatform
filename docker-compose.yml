@@ -1,0 +1,89 @@
+version: '3.9'
+
+services:
+  srs:
+    image: ossrs/srs:5
+    container_name: srs
+    ports:
+      - "1935:1935"  # RTMP
+      - "1985:1985"  # SRS API
+      - "8080:8080"  # HLS HTTP
+    volumes:
+      - ./srs/srs.conf:/usr/local/srs/conf/srs.conf
+      - ./srs/objs/nginx/html:/hls
+      - ./srs/objs/nginx/html:/srs/recordings
+      - ./srs/objs/nginx/html:/usr/local/srs/objs/nginx/html
+    command: ["./objs/srs", "-c", "/usr/local/srs/conf/srs.conf"]
+    networks:
+      - default
+
+  backend:
+    build: ./backend
+    container_name: backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - ./srs/objs/nginx/html:/hls
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://user:password@db:5432/streams
+    networks:
+      - default
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - default
+
+  db:
+    image: postgres:14
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: streams
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  nginx:
+    image: nginx:latest
+    container_name: hls-nginx
+    ports:
+      - "8081:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./srs/objs/nginx/html:/usr/share/nginx/html:ro
+    depends_on:
+      - srs
+    networks:
+      - default
+
+  thumbnail_updater:
+    build: ./thumbnail_updater
+    depends_on:
+      - backend
+      - nginx
+    volumes:
+      - ./srs/objs/nginx/html:/hls    
+    networks:
+      - default
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+volumes:
+  pgdata:
