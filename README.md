@@ -51,5 +51,7 @@ docker-compose up --build
 - SRS (RTMP): `rtmp://localhost/live/`
 
 To start stream you need to open OBS. In stream service selection choose custom and paste this credentials
+
 Host: `rtmp://localhost/live/`
+
 Stream key: `you can get it when creating a stream on platform`
