@@ -4,20 +4,20 @@ Twitch-inspired pet project where users can launch streams, watch VODs, and chat
 
 ---
 
-## 🚀 Features
+## Features
 
-- ✅ JWT-based authentication and registration
-- ✅ Stream broadcasting using SRS + FFmpeg
-- ✅ Watch LIVE and VOD streams
-- ✅ Automatic thumbnail generation
-- ✅ Built-in chat WebSocket + Redis (still developing this)
-- ✅ "My Streams" dashboard with inline editing
-- ✅ Sidebar with active channels
-- ✅ Responsive UI (React + MUI)
+- JWT-based authentication and registration
+- Stream broadcasting using SRS + FFmpeg
+- Watch LIVE and VOD streams
+- Automatic thumbnail generation
+- Built-in chat WebSocket + Redis (still developing this)
+- "My Streams" dashboard
+- Sidebar with active channels
+- Responsive UI (React + MUI)
 
 ---
 
-## 🧱 Tech Stack
+## Tech Stack
 
 | Technology     | Purpose                              |
 |----------------|--------------------------------------|
@@ -31,16 +31,16 @@ Twitch-inspired pet project where users can launch streams, watch VODs, and chat
 
 ---
 
-## 📦 Setup
+## Setup
 
-### 🔧 1. Clone the repository
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/XcecnaX/StreamingPlatform.git
 cd StreamingPlatform
 ```
 
-### 🐳 2. Run with Docker
+### 2. Run with Docker
 
 ```bash
 docker-compose up --build
